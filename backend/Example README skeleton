@@ -1,0 +1,25 @@
+# Meeting Summarizer
+Objective: Transcribe meeting audio and generate action-oriented summaries.
+
+## Features
+- Upload audio, get transcript
+- Summaries: short summary, decisions, action items
+- Pluggable ASR adapters (OpenAI, Azure, Google)
+- Simple frontend to upload files
+
+## Setup
+1. Clone repo
+2. Create virtualenv
+3. Set env vars (OPENAI_API_KEY etc.)
+4. Run uvicorn backend.app:app --reload
+
+## Demo
+- link to demo video (include short recording of upload -> transcript -> summary)
+
+## Architecture
+(brief diagram)
+
+## How to extend
+- Add diarization via pyannote
+- Add persistent DB (Postgres)
+- Add user authentication
