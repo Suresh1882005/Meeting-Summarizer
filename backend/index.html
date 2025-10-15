@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Meeting Summarizer - Demo</title>
+  <style>
+    body { font-family: system-ui, Arial; max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    .box { border: 1px solid #ddd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    pre { background:#f8f8f8; padding:1rem; border-radius:6px; white-space:pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Meeting Summarizer — Demo</h1>
+  <div class="box">
+    <label>Meeting title (optional):</label><br/>
+    <input id="title" type="text" placeholder="Sprint Planning - 2025-10-15" style="width:100%; padding:8px; margin:0.5rem 0;" />
+    <label>Choose audio file:</label><br/>
+    <input id="file" type="file" accept="audio/*" /><br/><br/>
+    <label>ASR provider:</label>
+    <select id="provider">
+      <option value="openai">openai</option>
+      <option value="azure">azure</option>
+    </select>
+    <button id="uploadBtn" onclick="upload()" style="margin-left:1rem;">Upload & Summarize</button>
+  </div>
+
+  <div class="box">
+    <h3>Result</h3>
+    <div id="status">No upload yet.</div>
+    <h4>Transcript</h4>
+    <pre id="transcript"></pre>
+    <h4>Summary (JSON)</h4>
+    <pre id="summary"></pre>
+  </div>
+
+<script>
+async function upload(){
+  const f = document.getElementById('file').files[0];
+  const title = document.getElementById('title').value;
+  const provider = document.getElementById('provider').value;
+  if(!f){ alert("Choose an audio file."); return; }
+  const form = new FormData();
+  form.append('file', f);
+  form.append('asr_provider', provider);
+  form.append('meeting_title', title);
+
+  document.getElementById('status').textContent = 'Uploading...';
+  try{
+    const res = await fetch('http://localhost:8000/upload', {method:'POST', body: form});
+    if(!res.ok){
+      const text = await res.text();
+      document.getElementById('status').textContent = 'Error: ' + res.status + ' - ' + text;
+      return;
+    }
+    const data = await res.json();
+    document.getElementById('status').textContent = 'Done';
+    document.getElementById('transcript').textContent = data.transcript || '';
+    document.getElementById('summary').textContent = JSON.stringify(data.summary, null, 2) || '';
+  }catch(e){
+    console.error(e);
+    document.getElementById('status').textContent = 'Network or server error. See console.';
+  }
+}
+</script>
+</body>
+</html>
