@@ -33,6 +33,3 @@ python main.py --mode eval --model_path trained_model_path --gen_max_length 500
 |   30  |  0.4762 |  0.1862 |  0.1767 |
 |   40  |  0.4796 |  0.1935 |  0.1858 |
 
-
-### Contact
-- jude.lee@kakaocorp.com
